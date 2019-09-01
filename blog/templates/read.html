@@ -1,0 +1,40 @@
+<p>글 제목 : {{post.title}}</p>
+<p>글 내용</p>
+{{post.content|linebreaksbr}}
+<br>
+<a href="/">돌아가기</a>
+<a href="{%url 'update' post.id%}">글수정</a>
+<a href="{%url 'delete' post.id%}">글삭제</a>
+
+{% if user.is_authenticated %}
+<form action="{%url 'c_create' post.id%}" method="POST">
+    {%csrf_token%}
+    <div class="input-group mt-5 mb-5">
+        <input type="text" name="comment" class="form-control" placeholder="댓글을 입력하세요">
+        <div class="input-group-prepend">
+            <div class="input-group-text">
+                <input type="checkbox" name="anonymous" value="y">
+                <span style="font-size: 0.7em;">익명</span>
+            </div>
+        </div>
+        <div class="input-group-append">
+            <button class="btn btn-danger"><i class="fas fa-pencil-alt"></i></button>
+        </div>
+    </div>
+</form>
+{% endif %}
+
+<ul class="list-group mb-2">
+    {%for c in comment%}
+    <li class="list-group-item list-group-item-light">
+        {%if c.anonymous == True%}
+				<!-- anonymous 필드 속성이   -->
+        <span style="font-weight: bold;font-size:0.7em;">익명</span>
+        {%else%}
+        <span style="font-weight: bold;font-size:0.7em;">{{c.user}}</span>
+        {%endif%}
+        <br>
+        {{c.content}}
+    </li>
+    {%endfor%}
+</ul>
